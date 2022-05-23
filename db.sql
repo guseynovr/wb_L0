@@ -1,4 +1,7 @@
-createdb -p5433 wb
+createdb -p 5433 (5432) wb
+
+CREATE USER wb_user with encrypted password 'wb_pass';
+GRANT ALL PRIVILEGES ON DATABASE wb to wb_user;
 
 CREATE TABLE payment (
     id SERIAL PRIMARY KEY,
