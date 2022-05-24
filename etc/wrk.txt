@@ -1,0 +1,22 @@
+#Before
+Running 30s test @ http://127.0.0.1:8000/?uid=manyitems
+  12 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.32ms   74.53ms   1.15s    85.93%
+    Req/Sec   794.61    523.82     2.42k    55.82%
+  276306 requests in 30.05s, 1.81GB read
+  Socket errors: connect 155, read 33, write 4, timeout 0
+Requests/sec:   9196.27
+Transfer/sec:     61.68MB
+un-i2% ./wrk -t12 -c400 -d30s "http://127.0.0.1:8000/?uid=manyitems"
+
+#After
+Running 30s test @ http://127.0.0.1:8000/?uid=manyitems
+  12 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.08ms   32.57ms 393.90ms   86.41%
+    Req/Sec     1.35k     0.93k    4.85k    50.07%
+  482726 requests in 30.09s, 3.16GB read
+  Socket errors: connect 155, read 86, write 0, timeout 0
+Requests/sec:  16043.59
+Transfer/sec:    107.61MB

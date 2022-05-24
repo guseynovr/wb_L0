@@ -22,6 +22,7 @@ var (
 	db		*sql.DB
 	sc		stan.Conn
 	cache	map[string]Order
+	tmpl	*template.Template
 )
 
 func init() {
@@ -45,6 +46,10 @@ func init() {
 		log.Fatal(err)
 	}
 	restoreCache()
+	tmpl, err = template.ParseFiles("index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -52,13 +57,13 @@ func main() {
 
 	ins, err := db.Prepare("INSERT INTO orders (uid, data) values ($1, $2);")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, "1")
 	}
 	defer ins.Close()
 	
 	upd, err := db.Prepare("UPDATE orders SET data = $2 WHERE uid = $1;")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, "2")
 	}
 	defer upd.Close()
 
@@ -73,25 +78,23 @@ func main() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	uid := r.URL.Query().Get("uid")
-
 	order := cache[uid]
-	tmpl, err := template.ParseFiles("index.html")
-	if err != nil {
+	
+	if err := tmpl.Execute(w, order); err != nil {
 		log.Fatal(err)
 	}
-	tmpl.Execute(w, order)
 }
 
 func restoreCache() {
 	sel, err := db.Prepare("SELECT * FROM orders;")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, "3")
 	}
-	sel.Close()
+	defer sel.Close()
 	
 	rows, err := sel.Query()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, "4")
 	}
 	var id int
 	var uid, raw []byte
