@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
+	"net/http"
 	"os/user"
-	"time"
 
 	stan "github.com/nats-io/stan.go"
 
@@ -67,7 +68,18 @@ func main() {
 	}, stan.DurableName(durName))
 	defer sub.Unsubscribe()
 
-	time.Sleep(10 * time.Minute)
+	log.Fatal(http.ListenAndServe(":8000", http.HandlerFunc(handler)))
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	uid := r.URL.Query().Get("uid")
+
+	order := cache[uid]
+	tmpl, err := template.ParseFiles("index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmpl.Execute(w, order)
 }
 
 func restoreCache() {
@@ -75,6 +87,8 @@ func restoreCache() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	sel.Close()
+	
 	rows, err := sel.Query()
 	if err != nil {
 		log.Fatal(err)
@@ -100,6 +114,7 @@ func handleMessage(m *stan.Msg, ins, upd *sql.Stmt) {
 		log.Println("Received invalid JSON data")
 		return
 	}
+
 	_, exists := cache[newOrder.OrderUID]
 	cache[newOrder.OrderUID] = newOrder;
 	log.Printf("Received a new order: %s\n", newOrder.OrderUID)

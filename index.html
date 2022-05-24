@@ -5,10 +5,11 @@
 		<form style="margin: 2em"
 			class="form-inline" action="/" method="get">
 			<label for="order">Order:</label>
-			<input type="order" id="order" placeholder="UID" name="order">
+			<input type="text" id="order" placeholder="UID" name="uid">
 		</form>
 		</center>
 		<div></div>
+		{{if ne .OrderUID ""}}
 		<table border=1>
 			<thead>
 				<tr>
@@ -27,17 +28,17 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>b563feb7b2b84b6test</td>
-					<td>WBILMTESTTRACK</td>
-					<td>WBIL</td>
-					<td>en</td>
-					<td></td>
-					<td>test</td>
-					<td>meest</td>
-					<td>9</td>
-					<td>99</td>
-					<td>2021-11-26T06:22:19Z</td>
-					<td>1</td>
+					<td>{{.OrderUID}}</td>
+					<td>{{.TrackNumber}}</td>
+					<td>{{.Entry}}</td>
+					<td>{{.Locale}}</td>
+					<td>{{.InternalSignature}}</td>
+					<td>{{.CustomerID}}</td>
+					<td>{{.DeliveryService}}</td>
+					<td>{{.Shardkey}}</td>
+					<td>{{.SmID}}</td>
+					<td>{{.DateCreated}}</td>
+					<td>{{.OofShard}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -56,13 +57,13 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>Test Testov</td>
-					<td>+9720000000</td>
-					<td>2639809</td>
-					<td>Kiryat Mozkin</td>
-					<td>Ploshad Mira 15</td>
-					<td>Kraiot</td>
-					<td>test@gmail.com</td>
+					<td>{{.Delivery.Name}}</td>
+					<td>{{.Delivery.Phone}}</td>
+					<td>{{.Delivery.Zip}}</td>
+					<td>{{.Delivery.City}}</td>
+					<td>{{.Delivery.Address}}</td>
+					<td>{{.Delivery.Region}}</td>
+					<td>{{.Delivery.Email}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -84,16 +85,16 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td>b563feb7b2b84b6test</td>
-					<td></td>
-					<td>USD</td>
-					<td>wbpay</td>
-					<td>1817</td>
-					<td>1637907727</td>
-					<td>alpha</td>
-					<td>1500</td>
-					<td>317</td>
-					<td>0</td>
+					<td>{{.Payment.Transaction}}</td>
+					<td>{{.Payment.RequestID}}</td>
+					<td>{{.Payment.Currency}}</td>
+					<td>{{.Payment.Provider}}</td>
+					<td>{{.Payment.Amount}}</td>
+					<td>{{.Payment.PaymentDt}}</td>
+					<td>{{.Payment.Bank}}</td>
+					<td>{{.Payment.DeliveryCost}}</td>
+					<td>{{.Payment.GoodsTotal}}</td>
+					<td>{{.Payment.CustomFee}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -114,21 +115,24 @@
 					<th>status</th>
 				</tr>
 			</thead>
+			{{range .Items}}
 			<tbody>
 				<tr>
-					<td>9934930</td>
-					<td>WBILMTESTTRACK</td>
-					<td>453</td>
-					<td>ab4219087a764ae0btest</td>
-					<td>Mascaras</td>
-					<td>30</td>
-					<td>0</td>
-					<td>317</td>
-					<td>2389212</td>
-					<td>Vivienne Sabo</td>
-					<td>202</td>
+					<td>{{.ChrtID}}</td>
+					<td>{{.TrackNumber}}</td>
+					<td>{{.Price}}</td>
+					<td>{{.Rid}}</td>
+					<td>{{.Name}}</td>
+					<td>{{.Sale}}</td>
+					<td>{{.Size}}</td>
+					<td>{{.TotalPrice}}</td>
+					<td>{{.NmID}}</td>
+					<td>{{.Brand}}</td>
+					<td>{{.Status}}</td>
 				</tr>
 			</tbody>
+			{{end}}
 		</table>
+		{{end}}
 	</body>
 </html>
